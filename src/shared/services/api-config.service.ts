@@ -111,7 +111,7 @@ export class ApiConfigService {
     return {
       entities,
       migrations,
-      type: 'mysql',
+      type: 'postgres',
       host: this.dbEnvironment.host,
       port: this.dbEnvironment.port,
       username: this.dbEnvironment.username,

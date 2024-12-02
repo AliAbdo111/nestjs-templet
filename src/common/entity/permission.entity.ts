@@ -16,7 +16,7 @@ export class PermissionEntity {
 
   @ManyToOne(() => RoleEntity, (roleId) => roleId.id, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    onUpdate: 'CASCADE', 
   })
   role: RoleEntity;
 }

@@ -13,7 +13,7 @@ import { RolePermissionModule } from './modules/role-permission/role-permission.
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-    }),
+    }), 
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
       useFactory: (configService: ApiConfigService) =>

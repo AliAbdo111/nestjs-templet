@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../decorators/public.decorator';
 import { UserDto } from '../../common/dto/user-dto';
@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { LoginPayloadDto } from '../../common/dto/login-payload.dto';
 import { UserLoginDto } from '../../common/dto/user-login.dto';
 import { UserRegisterDto } from '../../common/dto/user-register.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -14,7 +15,7 @@ export class AuthController {
   constructor(
     public readonly userService: UserService,
     public readonly authService: AuthService,
-  ) {}
+  ) { }
 
   @Public()
   @Post('login')
@@ -44,4 +45,18 @@ export class AuthController {
 
     return createdUser.toDto();
   }
+  @Public()
+
+  @Get('/download-file')
+  async downloadFile(@Res() res: Response) {
+    const buffer = await this.authService.donwlaodFile()
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="file.pdf"',
+      'Content-Length': buffer.length,
+    });
+
+    res.send(buffer);
+  }
+
 }

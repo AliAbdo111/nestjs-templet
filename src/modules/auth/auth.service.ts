@@ -8,6 +8,9 @@ import { UserEntity } from '../../common/entity/user.entity';
 import { UserService } from '../user/user.service';
 import { TokenPayloadDto } from '../../common/dto/token-payload.dto';
 import { UserLoginDto } from '../../common/dto/user-login.dto';
+import * as puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class AuthService {
@@ -38,5 +41,34 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async donwlaodFile(): Promise<any> {
+    const browser = await puppeteer.launch();   
+    const page = await browser.newPage();
+
+    // Load HTML content (or use `page.goto` for a URL)
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Example</title>
+</head>
+<body>
+  <h1>Hello, this is a PDF generated in NestJS!</h1>
+  <p>This content will appear in the PDF file.</p>
+</body>
+</html>`;
+    await page.setContent(htmlContent);
+
+    // Generate the PDF
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+    });
+
+    await browser.close();
+    return pdfBuffer;
   }
 }

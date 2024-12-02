@@ -12,10 +12,21 @@ export class UserService {
     public userRepository: UserRepository,
     private rolePermissionService: RolePermissionService,
   ) {}
+  selectFields<T>(entity: T, fields: (keyof T)[]): (keyof T)[] {
+    return fields.filter((field) =>
+      Object.keys(entity).includes(field as string),
+    ) as (keyof T)[];
+  }
 
   findOne(conditions: FindConditions<UserEntity>): Promise<UserEntity> {
+    const selectedFields = this.selectFields(UserEntity.prototype, [
+      'id',
+      'firstName',
+      'email',
+    ]);
     return this.userRepository.findOne({
       where: conditions,
+      select: selectedFields,
       relations: ['role'],
     });
   }
